@@ -35,7 +35,7 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: Package
-      - run: cp Package/*.jar target/
+      - run: mkdir target && cp Package/*.jar target/
       - run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
       - run: docker build -t $REPO:latest -t $REPO:${GITHUB_SHA::8} .
       - run: docker push $REPO
