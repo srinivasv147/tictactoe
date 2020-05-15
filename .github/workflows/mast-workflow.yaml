@@ -32,10 +32,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Downloading created package
-        uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v1
         with:
           name: Package
-        run: cp staging/*.jar target/
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
-        run: docker build -t $REPO:latest -t $REPO:${GITHUB_SHA::8} .
-        run: docker push $REPO
+      - run: cp staging/*.jar target/
+      - run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+      - run: docker build -t $REPO:latest -t $REPO:${GITHUB_SHA::8} .
+      - run: docker push $REPO
