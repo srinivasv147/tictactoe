@@ -45,6 +45,8 @@ public class LoginService {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		//Generate token with email address.
 		if(gTokenIsValid) {

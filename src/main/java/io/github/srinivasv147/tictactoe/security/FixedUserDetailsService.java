@@ -15,13 +15,12 @@ public class FixedUserDetailsService implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
 		//since we validate the jwt we use a constant user for any person.
-		if(username == USER) {
+		if(username.equals(USER)) {
 			return new User(USER, "default", new ArrayList<>());
 		}
 		else {
-			throw new UsernameNotFoundException("user "+username+"was not found");
+			throw new UsernameNotFoundException("user "+username+" was not found");
 		}
 	}
 	

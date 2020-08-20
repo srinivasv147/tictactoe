@@ -1,4 +1,4 @@
-package io.github.srinivasv147.tictactoe.service;
+package io.github.srinivasv147.tictactoe.security;
 
 import java.io.IOException;
 
@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import io.github.srinivasv147.tictactoe.service.JwtUtils;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter{
@@ -31,9 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 	private void nullifySecurityToken() {
 		// I am afraid that someone might send the constant user access token that I have set so
 		// I will null any incoming access token for good measure.
-		UsernamePasswordAuthenticationToken userPassAuthToken 
-		= new UsernamePasswordAuthenticationToken(null, null, null);
-		SecurityContextHolder.getContext().setAuthentication(userPassAuthToken);
+		SecurityContextHolder.getContext().setAuthentication(null);
 	}
 
 	@Override
@@ -46,10 +46,11 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 			String jwt = authHeader.substring(7);
 			try {
 				String userEmail = jwtUtils.getUsernameFromToken(jwt);//if this fails the jwt is wrong.
+				
 				if(jwtUtils.validateToken(jwt, userEmail)) {//checks if token is expired
 					UserDetails user = fixedUserDetailsService.loadUserByUsername(FIXED_USER);
 					UsernamePasswordAuthenticationToken userPassAuthToken 
-					= new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+					= new UsernamePasswordAuthenticationToken(user, "default", user.getAuthorities());
 					SecurityContextHolder.getContext().setAuthentication(userPassAuthToken);
 				}
 				else {
