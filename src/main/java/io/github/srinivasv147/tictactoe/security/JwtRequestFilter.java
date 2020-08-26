@@ -45,9 +45,9 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 		if(authHeader != null && authHeader.startsWith(BEARER)) {
 			String jwt = authHeader.substring(7);
 			try {
-				String userEmail = jwtUtils.getUsernameFromToken(jwt);//if this fails the jwt is wrong.
+				String userId = jwtUtils.getUsernameFromToken(jwt);//if this fails the jwt is wrong.
 				
-				if(jwtUtils.validateToken(jwt, userEmail)) {//checks if token is expired
+				if(jwtUtils.validateToken(jwt, userId)) {//checks if token is expired
 					UserDetails user = fixedUserDetailsService.loadUserByUsername(FIXED_USER);
 					UsernamePasswordAuthenticationToken userPassAuthToken 
 					= new UsernamePasswordAuthenticationToken(user, "default", user.getAuthorities());
