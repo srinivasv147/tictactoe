@@ -14,7 +14,7 @@ import io.github.srinivasv147.tictactoe.objects.Move;
 @Component
 public class FindMoveService {
 	
-	public static final Logger logger = LoggerFactory.getLogger(FindMoveService.class);
+	Logger logger = LoggerFactory.getLogger(FindMoveService.class);
 	private static final Double MAX_REWARD_FOR_WIN = 10000.0;
 	
 	public GameStateDTO findNextMove(List<Integer> gameState) {

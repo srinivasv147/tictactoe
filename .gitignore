@@ -12,6 +12,7 @@ local.properties
 .classpath
 .DS_Store
 /target/
+/db/
 
 # External tool builders
 .externalToolBuilders/

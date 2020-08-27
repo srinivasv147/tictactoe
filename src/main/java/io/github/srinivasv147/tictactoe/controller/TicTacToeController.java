@@ -2,6 +2,8 @@ package io.github.srinivasv147.tictactoe.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,8 @@ import io.github.srinivasv147.tictactoe.service.UserService;
 @RestController
 @RequestMapping("/api")
 public class TicTacToeController{
+	
+	Logger logger = LoggerFactory.getLogger(TicTacToeController.class);
 	
 	@Autowired
 	FindMoveService findMove;
@@ -48,13 +52,15 @@ public class TicTacToeController{
 	public LoginResDTO createUser(@RequestBody CreateUserDTO user) {
 		Boolean created = false;
 		Boolean isEmailValid = loginService.checkValidEmail(user.getLoginDTO());
+		logger.info("the user {} has email validity {}", user.getUserId(), isEmailValid);
 		if(isEmailValid) {
-			created = userService.createUser(user.getLoginDTO().getEmail(), user.getUserId());
+			if(user.getUserId() != null)
+				created = userService.createUser(user.getLoginDTO().getEmail(), user.getUserId());
+			logger.info("the user {} has been created {}", user.getUserId(), created);
 			if(created) return loginService.generateLoginRes(user.getLoginDTO(), true);
-			else new LoginResDTO(null, false, false, null);
+			else return new LoginResDTO(null, true, false, null);
 		}
 		else return new LoginResDTO(null, false, false, null);
-		return null;
 	}
 
 }
