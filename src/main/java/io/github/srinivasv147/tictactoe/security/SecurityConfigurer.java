@@ -25,7 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private FixedUserDetailsService fixedUserDetailsService;
+	private PrincipalUserDetailsService principalUserDetailsService;
 	
 	@Autowired
 	private JwtRequestFilter jwtFilter;
@@ -35,7 +35,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(fixedUserDetailsService).passwordEncoder(passwordEncoder());
+		auth.userDetailsService(principalUserDetailsService).passwordEncoder(passwordEncoder());
 	}
 	
 	@Bean

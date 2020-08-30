@@ -24,11 +24,10 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 	JwtUtils jwtUtils;
 	
 	@Autowired
-	UserDetailsService fixedUserDetailsService;
+	UserDetailsService principalUserDetailsService;
 	
 	private static final String AUTH_HEADER = "Authorization";
 	private static final String BEARER = "Bearer";
-	private static final String FIXED_USER = "const-user";
 	
 	private void nullifySecurityToken() {
 		// I am afraid that someone might send the constant user access token that I have set so
@@ -48,7 +47,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 				String userId = jwtUtils.getUsernameFromToken(jwt);//if this fails the jwt is wrong.
 				
 				if(jwtUtils.validateToken(jwt, userId)) {//checks if token is expired
-					UserDetails user = fixedUserDetailsService.loadUserByUsername(FIXED_USER);
+					UserDetails user = principalUserDetailsService.loadUserByUsername(userId);
 					UsernamePasswordAuthenticationToken userPassAuthToken 
 					= new UsernamePasswordAuthenticationToken(user, "default", user.getAuthorities());
 					SecurityContextHolder.getContext().setAuthentication(userPassAuthToken);

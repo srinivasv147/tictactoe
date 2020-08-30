@@ -39,4 +39,10 @@ public class UserService {
 		return null;
 	}
 
+	public boolean checkUserByUserId(String userId) {
+		Optional<User> user = userRepository.findOneByUserId(userId);
+		if(user.isPresent()) return true;
+		return false;
+	}
+
 }
