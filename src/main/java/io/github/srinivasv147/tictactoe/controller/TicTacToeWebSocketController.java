@@ -24,7 +24,7 @@ public class TicTacToeWebSocketController {
 		
 		if(challenge.getChallengee() != null)
 			this.simpleMessagingTemplate
-			.convertAndSend("/user/"+challenge.getChallengee()+"/topic/challenge", challenge);
+			.convertAndSendToUser(challenge.getChallengee(), "/queue/challenge", challenge);
 		
 	}
 }

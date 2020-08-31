@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,8 @@ import io.github.srinivasv147.tictactoe.service.JwtUtils;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter{
 	
+	Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
+	
 	@Autowired
 	JwtUtils jwtUtils;
 	
@@ -32,12 +36,15 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 	private void nullifySecurityToken() {
 		// I am afraid that someone might send the constant user access token that I have set so
 		// I will null any incoming access token for good measure.
+		logger.info("filter could not find valid user");
 		SecurityContextHolder.getContext().setAuthentication(null);
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		
+		logger.info("the requests are passing through the filter");
 		
 		final String authHeader = request.getHeader(AUTH_HEADER);
 		

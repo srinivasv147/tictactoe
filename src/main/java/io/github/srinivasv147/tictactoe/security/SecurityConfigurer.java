@@ -51,6 +51,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		.antMatchers("/api/authenticate*").permitAll()
 		.antMatchers("/api/create-user*").permitAll()
 		.antMatchers("/h2-console/**").permitAll()
+		.antMatchers("/api/websok*").permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.exceptionHandling().authenticationEntryPoint(authEntryPoint)
