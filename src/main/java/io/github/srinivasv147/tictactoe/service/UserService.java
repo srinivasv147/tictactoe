@@ -45,4 +45,10 @@ public class UserService {
 		return false;
 	}
 
+	public User getUserByUserId(String userId) {
+		Optional<User> user = userRepository.findOneByUserId(userId);
+		if(user.isPresent()) return user.get();
+		else return null;
+	}
+
 }

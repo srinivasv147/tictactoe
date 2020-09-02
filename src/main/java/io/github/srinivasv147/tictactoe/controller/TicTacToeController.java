@@ -1,5 +1,6 @@
 package io.github.srinivasv147.tictactoe.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import io.github.srinivasv147.tictactoe.dto.LoginDTO;
 import io.github.srinivasv147.tictactoe.dto.LoginResDTO;
 import io.github.srinivasv147.tictactoe.service.FindMoveService;
 import io.github.srinivasv147.tictactoe.service.LoginService;
+import io.github.srinivasv147.tictactoe.service.OtpService;
 import io.github.srinivasv147.tictactoe.service.UserService;
 
 @CrossOrigin
@@ -36,6 +38,10 @@ public class TicTacToeController{
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	OtpService otpService;
+	
 	
 	@GetMapping("/game/{gameState}")
 	public GameStateDTO greeting(
@@ -61,6 +67,13 @@ public class TicTacToeController{
 			else return new LoginResDTO(null, true, false, null);
 		}
 		else return new LoginResDTO(null, false, false, null);
+	}
+	
+	@PostMapping("/get-ws-ticket")
+	public LoginResDTO getWsTicket(Principal principal) {
+		String userId = principal.getName();
+		String otp = otpService.createOtp(userId);
+		return new LoginResDTO(otp,null,null,null);
 	}
 
 }
