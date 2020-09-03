@@ -2,6 +2,8 @@ package io.github.srinivasv147.tictactoe.service;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,8 +17,7 @@ import io.github.srinivasv147.tictactoe.repository.OtpRepository;
 @Component
 public class OtpService {
 	
-	@Autowired
-	private UserService userService;
+	Logger logger = LoggerFactory.getLogger(OtpService.class);
 	
 	@Autowired
 	private OtpRepository otpRepository;
@@ -24,26 +25,27 @@ public class OtpService {
 	@Value("${otp.length}")
 	private Integer otpLength;
 	
-	public String createOtp(String userId) {
-		boolean repeated = true;
-		String otp = "";
-		User curUser = userService.getUserByUserId(userId);
-		if (curUser == null) return "DEFAULT";
-		while(repeated) {
-			otp = generateRandomString(otpLength);
-			//if user exists then update the otp and if not then add otp, if otp exits generate a new otp.
-			repeated = addOtptoDb(otp, curUser);
-		}
-		return otp;
-	}
-	
 	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public boolean addOtptoDb(String otp, User curUser) {
-		
-		return false;
+	public boolean addOtptoUser(String otp, User curUser) {
+		try {
+			Optional<Otp> temp = otpRepository.findOneByUser(curUser.getEmail());
+			if(temp.isPresent()) {
+				temp.get().setToken(otp);
+				otpRepository.saveAndFlush(temp.get());
+			}
+			else {
+				otpRepository.saveAndFlush(new Otp(otp,curUser));
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			logger.error(e.toString());
+			return false;
+		}
+		return true;
 	}
 
-	private String generateRandomString(Integer len) {
+	public String generateRandomString() {
 		
 		String str = "abcdefghijklmnopqrstuvwxyzABCD"
 	            +"EFGHIJKLMNOPQRSTUVWXYZ0123456789"; 
@@ -52,7 +54,7 @@ public class OtpService {
 	    // String to hold my OTP 
 	    StringBuilder otp = new StringBuilder(); 
 	  
-	    for (int i = 1; i <= len; i++) 
+	    for (int i = 1; i <= otpLength; i++) 
 	        otp.append(str.charAt((int) ((Math.random()*10) % n))); 
 	  
 	    return otp.toString(); 

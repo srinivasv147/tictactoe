@@ -18,6 +18,7 @@ import io.github.srinivasv147.tictactoe.dto.CreateUserDTO;
 import io.github.srinivasv147.tictactoe.dto.GameStateDTO;
 import io.github.srinivasv147.tictactoe.dto.LoginDTO;
 import io.github.srinivasv147.tictactoe.dto.LoginResDTO;
+import io.github.srinivasv147.tictactoe.entities.User;
 import io.github.srinivasv147.tictactoe.service.FindMoveService;
 import io.github.srinivasv147.tictactoe.service.LoginService;
 import io.github.srinivasv147.tictactoe.service.OtpService;
@@ -72,8 +73,22 @@ public class TicTacToeController{
 	@PostMapping("/get-ws-ticket")
 	public LoginResDTO getWsTicket(Principal principal) {
 		String userId = principal.getName();
-		String otp = otpService.createOtp(userId);
+		String otp = createOtp(userId);
 		return new LoginResDTO(otp,null,null,null);
 	}
+
+	private String createOtp(String userId) {
+		boolean repeated = true;
+		String otp = "";
+		User curUser = userService.getUserByUserId(userId);
+		if (curUser == null) return "DEFAULT";
+		while(repeated) {
+			otp = otpService.generateRandomString();
+			repeated = otpService.addOtptoUser(otp, curUser);
+		}
+		return otp;
+	}
+	
+	
 
 }
