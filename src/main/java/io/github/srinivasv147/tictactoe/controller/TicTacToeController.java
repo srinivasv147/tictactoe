@@ -70,21 +70,28 @@ public class TicTacToeController{
 		else return new LoginResDTO(null, false, false, null);
 	}
 	
-	@PostMapping("/get-ws-ticket")
+	@GetMapping("/get-ws-ticket")
 	public LoginResDTO getWsTicket(Principal principal) {
 		String userId = principal.getName();
+		logger.info("user is {}", userId);
 		String otp = createOtp(userId);
+		logger.info("generated otp is {} for user {}", otp, userId);
+		System.out.println("generated otp is "+otp);
 		return new LoginResDTO(otp,null,null,null);
 	}
 
 	private String createOtp(String userId) {
-		boolean repeated = true;
+		logger.info("entered into otp generator for user {}", userId);
+		boolean repeated = false;
 		String otp = "";
 		User curUser = userService.getUserByUserId(userId);
 		if (curUser == null) return "DEFAULT";
-		while(repeated) {
+		logger.info("got email for user {} it is {}", userId, curUser.getEmail());
+		while(!repeated) {
 			otp = otpService.generateRandomString();
+			logger.info("generated otp is {}",otp);
 			repeated = otpService.addOtptoUser(otp, curUser);
+			logger.info("{} inserted otp {} in user {}",repeated,otp,userId);
 		}
 		return otp;
 	}
