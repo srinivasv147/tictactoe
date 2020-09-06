@@ -2,6 +2,8 @@ package io.github.srinivasv147.tictactoe.dto;
 
 public class ChallengeDTO {
 	
+	private Long id;
+	
 	private String challengee;
 	
 	private String challenger;
@@ -9,6 +11,20 @@ public class ChallengeDTO {
 	private Boolean isChallengerX;
 	
 	public ChallengeDTO() {}
+	
+	public ChallengeDTO(ChallengeDTO challenge) {
+		this.id = challenge.id;
+		this.challengee = challenge.challengee;
+		this.challenger = challenge.challenger;
+		this.isChallengerX = challenge.isChallengerX;
+	}
+	
+	public ChallengeDTO(Long id, String challengee, String challenger, Boolean isChallengerX) {
+		this.id = id;
+		this.challengee = challengee;
+		this.challenger = challenger;
+		this.isChallengerX = isChallengerX;
+	}
 
 	public String getChallengee() {
 		return challengee;
@@ -32,6 +48,14 @@ public class ChallengeDTO {
 
 	public void setIsChallengerX(Boolean isChallengerX) {
 		this.isChallengerX = isChallengerX;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

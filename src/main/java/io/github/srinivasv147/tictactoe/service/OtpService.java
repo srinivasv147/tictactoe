@@ -28,7 +28,7 @@ public class OtpService {
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public boolean addOtptoUser(String otp, User curUser) {
 		try {
-			Optional<Otp> temp = otpRepository.findOneByUser(curUser.getEmail());
+			Optional<Otp> temp = otpRepository.findOneByUser(curUser.getUsrId());
 			if(temp.isPresent()) {
 				temp.get().setToken(otp);
 				otpRepository.saveAndFlush(temp.get());

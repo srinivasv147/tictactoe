@@ -19,7 +19,7 @@ public class Otp {
 	private String token;
 	
 	@OneToOne
-	@JoinColumn(name = "email", unique = true)
+	@JoinColumn(name = "usrId", unique = true)
 	private User User;
 	
 	public User getUser() {

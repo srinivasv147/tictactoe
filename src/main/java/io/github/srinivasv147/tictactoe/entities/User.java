@@ -7,10 +7,10 @@ import javax.persistence.Id;
 @Entity
 public class User {
 	
-	@Id
+	@Column(unique = true)
 	private String email;
 	
-	@Column(unique = true)
+	@Id
 	private String usrId;
 	
 	public User() {}
