@@ -1,5 +1,7 @@
 package io.github.srinivasv147.tictactoe.entities;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,6 +13,7 @@ public class User {
 	private String email;
 	
 	@Id
+	@Access(AccessType.PROPERTY)
 	private String usrId;
 	
 	public User() {}

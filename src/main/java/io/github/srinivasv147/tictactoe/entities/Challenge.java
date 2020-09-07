@@ -1,6 +1,7 @@
 package io.github.srinivasv147.tictactoe.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,14 +15,14 @@ public class Challenge {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long Id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "challengee_id")
 	private User challengee;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "challenger_id")
 	private User challenger;
-	
+
 	private Boolean isChallengerX;
 	
 	public Challenge() {}
@@ -48,6 +49,20 @@ public class Challenge {
 		this.isChallengerX = isChallengerX;
 	}
 	
-	
+	public User getChallengee() {
+		return challengee;
+	}
+
+	public void setChallengee(User challengee) {
+		this.challengee = challengee;
+	}
+
+	public User getChallenger() {
+		return challenger;
+	}
+
+	public void setChallenger(User challenger) {
+		this.challenger = challenger;
+	}
 	
 }

@@ -30,7 +30,10 @@ public class TicTacToeWebSocketController {
 	
 	@MessageMapping("/accept-challenge")
 	public void acceptChallenge(ChallengeDTO challenge, Principal principal) throws Exception {
-		//write with game db and repository tomorrow.
+		if(challengeService.checkChallenge(challenge)) {
+			
+		}
+		
 	}
 	
 	@MessageMapping("/challenge")
