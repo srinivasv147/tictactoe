@@ -10,7 +10,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import io.github.srinivasv147.tictactoe.dto.ChallengeDTO;
+import io.github.srinivasv147.tictactoe.dto.TwoPGameDTO;
+import io.github.srinivasv147.tictactoe.entities.TwoPGame;
 import io.github.srinivasv147.tictactoe.service.ChallengeService;
+import io.github.srinivasv147.tictactoe.service.TwoPGameService;
 
 @Controller
 public class TicTacToeWebSocketController {
@@ -23,6 +26,9 @@ public class TicTacToeWebSocketController {
 	@Autowired
 	ChallengeService challengeService;
 	
+	@Autowired
+	TwoPGameService gameService;
+	
 	@MessageMapping("/game-move")
 	public void playMove(Principal principal) {
 		
@@ -30,8 +36,17 @@ public class TicTacToeWebSocketController {
 	
 	@MessageMapping("/accept-challenge")
 	public void acceptChallenge(ChallengeDTO challenge, Principal principal) throws Exception {
-		if(challengeService.checkChallenge(challenge)) {
-			
+		if(challengeService.checkChallenge(challenge) 
+				&& challenge.getChallengee().equals(principal.getName())
+				&& gameService.checkActiveGame(principal.getName())) {
+			// only act if challenge is valid and you are accepting challenges for yourself;
+			//check if there is an active game;
+			TwoPGame game = gameService.createGame(challenge);
+			TwoPGameDTO gameDTO = new TwoPGameDTO(game);
+			this.simpleMessagingTemplate
+			.convertAndSendToUser(challenge.getChallengee(), "/queue/game", gameDTO);
+			this.simpleMessagingTemplate
+			.convertAndSendToUser(challenge.getChallengee(), "/queue/game", gameDTO);
 		}
 		
 	}

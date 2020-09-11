@@ -1,9 +1,13 @@
 package io.github.srinivasv147.tictactoe.entities;
 
+import java.util.Date;
+
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 public class TwoPGame {
 	
@@ -21,6 +25,17 @@ public class TwoPGame {
 	String gameState;//comma separated game state. for simple games this is fine
 	
 	Boolean result;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastMoveTime;
+
+	public Date getLastMoveTime() {
+		return lastMoveTime;
+	}
+
+	public void setLastMoveTime(Date lastMoveTime) {
+		this.lastMoveTime = lastMoveTime;
+	}
 
 	public Long getId() {
 		return id;
