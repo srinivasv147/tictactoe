@@ -1,6 +1,5 @@
 package io.github.srinivasv147.tictactoe.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.github.srinivasv147.tictactoe.entities.TwoPGame;
@@ -23,9 +22,7 @@ public class TwoPGameDTO {
 		this.gameId = game.getId();
 		this.oUser = game.getoUser().getUsrId();
 		this.xUser = game.getxUser().getUsrId();
-		String[] stateArr = game.getGameState().split(",");
-		List<Integer> state = new ArrayList<>();
-		for(String pos : stateArr) state.add(Integer.parseInt(pos));
+		List<Integer> state = game.getGameState();
 		this.gameState.setGameState(state);
 		this.nextMoveX = FindMoveService.findNextPlayer(state) == 1;
 		this.gameState.setGameResult(game.getResult());

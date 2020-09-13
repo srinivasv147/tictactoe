@@ -1,6 +1,7 @@
 package io.github.srinivasv147.tictactoe.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import io.github.srinivasv147.tictactoe.dto.TwoPGameDTO;
 import io.github.srinivasv147.tictactoe.entities.TwoPGame;
 import io.github.srinivasv147.tictactoe.entities.User;
 import io.github.srinivasv147.tictactoe.enums.GameResultEnum;
+import io.github.srinivasv147.tictactoe.repository.ChallengeRepository;
 import io.github.srinivasv147.tictactoe.repository.TwoPGameRepository;
 
 @Service
@@ -25,6 +27,12 @@ public class TwoPGameService {
 	
 	@Autowired
 	ChallengeService challengeService;
+	
+	@Autowired
+	ChallengeRepository challengeRepository;
+	
+	@Autowired
+	FindMoveService findMoveService;
 
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public TwoPGame createGame(ChallengeDTO challenge) {
@@ -35,7 +43,9 @@ public class TwoPGameService {
 		game.setxUser(xUser);
 		game.setResult(GameResultEnum.UNDECIDED);
 		game.setLastMoveTime(new Date());
+		game.setGameState("0,0,0,0,0,0,0,0,0");
 		TwoPGame savedGame = gameRepository.saveAndFlush(game);
+		challengeRepository.deleteById(challenge.getId());
 		return savedGame;
 	}
 
@@ -44,13 +54,22 @@ public class TwoPGameService {
 		else return false;
 	}
 
-	private boolean isValidMove(TwoPGameDTO game) {
+	private boolean isValidMove(List<Integer> oldGameState
+			, List<Integer> newGameState) {
 		
 		return false;
 	}
 
 	public TwoPGame updateGame(TwoPGameDTO gameDto) {
-		
+		TwoPGame game = gameRepository.getOne(gameDto.getGameId());
+		List<Integer> oldGameState = game.getGameState();
+		List<Integer> newGameState = gameDto.getGameState().getGameState();
+		if(isValidMove(oldGameState, newGameState)) {
+			game.setGameState(newGameState);
+			game.setResult(findMoveService.checkGameOver(newGameState));
+			game.setLastMoveTime(new Date());
+			gameRepository.saveAndFlush(game);
+		}
 		return null;
 	}
 	

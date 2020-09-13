@@ -94,7 +94,7 @@ public class FindMoveService {
 	}
 
 
-	private GameResultEnum checkGameOver(List<Integer> gameState) {
+	public GameResultEnum checkGameOver(List<Integer> gameState) {
 		
 		long sumRow, sumCol
 		, rightDownDiagSum = 0, rightUpDiagSum = 0, zeroCount = 0;

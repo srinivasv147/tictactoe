@@ -1,6 +1,8 @@
 package io.github.srinivasv147.tictactoe.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -63,12 +65,21 @@ public class TwoPGame {
 		this.oUser = oUser;
 	}
 
-	public String getGameState() {
-		return gameState;
+	public List<Integer> getGameState() {
+		String[] gameStateArr = this.gameState.split(",");
+		List<Integer> state = new ArrayList<>();
+		for(String pos : gameStateArr) state.add(Integer.parseInt(pos));
+		return state;
 	}
 
 	public void setGameState(String gameState) {
 		this.gameState = gameState;
+	}
+	
+	public void setGameState(List<Integer> gameState) {
+		StringBuilder sb = new StringBuilder();
+		for(Integer pos : gameState) sb.append(pos.toString()+",");
+		this.gameState = sb.substring(0, sb.length()-1);
 	}
 
 	public GameResultEnum getResult() {
