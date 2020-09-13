@@ -31,10 +31,7 @@ public class FindMoveService {
 		}
 		
 		//find player to play. (assuming that x always plays first)
-		int player = 0;
-		for(int x : gameState) player += x;
-		player = (player == 0) ? 1 : -1;
-		logger.info("player to play is {}",player);
+		int player = findNextPlayer(gameState);
 		
 		//get rewards for the next move.
 		Move nextMove = getNextMove(gameState, player);
@@ -48,6 +45,13 @@ public class FindMoveService {
 		return new GameStateDTO(true, isGameOver
 				, gameState, result);
 		
+	}
+	
+	public static int findNextPlayer(List<Integer> gameState) {
+		int player = 0;
+		for(int x : gameState) player += x;
+		player = (player == 0) ? 1 : -1;
+		return player;
 	}
 
 	

@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import io.github.srinivasv147.tictactoe.enums.GameResultEnum;
+
 public class TwoPGame {
 	
 	@Id
@@ -24,7 +26,7 @@ public class TwoPGame {
 	
 	String gameState;//comma separated game state. for simple games this is fine
 	
-	Boolean result;
+	GameResultEnum result;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastMoveTime;
@@ -69,13 +71,15 @@ public class TwoPGame {
 		this.gameState = gameState;
 	}
 
-	public Boolean getResult() {
+	public GameResultEnum getResult() {
 		return result;
 	}
 
-	public void setResult(Boolean result) {
+	public void setResult(GameResultEnum result) {
 		this.result = result;
 	}
+
+	
 	
 	
 }

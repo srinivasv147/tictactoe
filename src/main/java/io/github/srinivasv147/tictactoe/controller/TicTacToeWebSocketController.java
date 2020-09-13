@@ -30,15 +30,23 @@ public class TicTacToeWebSocketController {
 	TwoPGameService gameService;
 	
 	@MessageMapping("/game-move")
-	public void playMove(Principal principal) {
-		
+	public void playMove(TwoPGameDTO gameDto, Principal principal) {
+		TwoPGame game = gameService.updateGame(gameDto);
+		if(game != null) {
+			TwoPGameDTO newGameDto = new TwoPGameDTO(game);
+			this.simpleMessagingTemplate
+			.convertAndSendToUser(newGameDto.getoUser(), "/queue/game", newGameDto);
+			this.simpleMessagingTemplate
+			.convertAndSendToUser(newGameDto.getxUser(), "/queue/game", newGameDto);
+		}
 	}
 	
 	@MessageMapping("/accept-challenge")
 	public void acceptChallenge(ChallengeDTO challenge, Principal principal) throws Exception {
 		if(challengeService.checkChallenge(challenge) 
 				&& challenge.getChallengee().equals(principal.getName())
-				&& gameService.checkActiveGame(principal.getName())) {
+				&& !gameService.checkActiveGame(principal.getName())
+				&& !gameService.checkActiveGame(challenge.getChallenger())) {
 			// only act if challenge is valid and you are accepting challenges for yourself;
 			//check if there is an active game;
 			TwoPGame game = gameService.createGame(challenge);
