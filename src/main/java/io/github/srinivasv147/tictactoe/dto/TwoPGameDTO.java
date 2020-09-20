@@ -18,11 +18,15 @@ public class TwoPGameDTO {
 	
 	Boolean nextMoveX;
 	
+	public TwoPGameDTO() {}
+	
 	public TwoPGameDTO(TwoPGame game){
 		this.gameId = game.getId();
 		this.oUser = game.getoUser().getUsrId();
 		this.xUser = game.getxUser().getUsrId();
 		List<Integer> state = game.getGameState();
+		//System.out.println(state.toString());
+		this.gameState = new GameStateDTO();
 		this.gameState.setGameState(state);
 		this.nextMoveX = FindMoveService.findNextPlayer(state) == 1;
 		this.gameState.setGameResult(game.getResult());

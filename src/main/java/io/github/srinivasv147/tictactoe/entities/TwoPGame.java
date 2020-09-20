@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.FetchType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,21 +17,24 @@ import javax.persistence.TemporalType;
 
 import io.github.srinivasv147.tictactoe.enums.GameResultEnum;
 
+@Entity
 public class TwoPGame {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "xUser_id")
 	User xUser;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "oUser_id")
 	User oUser;
 	
 	String gameState;//comma separated game state. for simple games this is fine
 	
+	@Enumerated(EnumType.STRING)
 	GameResultEnum result;
 	
 	@Temporal(TemporalType.TIMESTAMP)

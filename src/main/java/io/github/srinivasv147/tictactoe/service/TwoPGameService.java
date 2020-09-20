@@ -69,22 +69,25 @@ public class TwoPGameService {
 		Iterator<Integer> oldIterator = oldGameState.iterator();
 		Iterator<Integer> newIterator = newGameState.iterator();
 		while(oldIterator.hasNext()) {
-			if(oldIterator.next() == newIterator.next()) same++;
-			if(oldIterator.next() == 0 && newIterator.next() != 0) diff++;
+			int old = oldIterator.next();
+			int now = newIterator.next();
+			if(old == now) same++;
+			if(old == 0 && now != 0) diff++;
 		}
 		if(same == 8 && diff == 1) return true;
 		else return false;
 	}
 
 	public TwoPGame updateGame(TwoPGameDTO gameDto) {
-		TwoPGame game = gameRepository.getOne(gameDto.getGameId());
+		TwoPGame game = gameRepository.getGameByGameId(gameDto.getGameId());
 		List<Integer> oldGameState = game.getGameState();
 		List<Integer> newGameState = gameDto.getGameState().getGameState();
 		if(isValidMove(oldGameState, newGameState)) {
 			game.setGameState(newGameState);
 			game.setResult(findMoveService.checkGameOver(newGameState));
 			game.setLastMoveTime(new Date());
-			gameRepository.saveAndFlush(game);
+			game = gameRepository.saveAndFlush(game);
+			return game;
 		}
 		return null;
 	}

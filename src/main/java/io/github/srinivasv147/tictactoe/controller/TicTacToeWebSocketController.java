@@ -36,8 +36,10 @@ public class TicTacToeWebSocketController {
 			TwoPGameDTO newGameDto = new TwoPGameDTO(game);
 			this.simpleMessagingTemplate
 			.convertAndSendToUser(newGameDto.getoUser(), "/queue/game", newGameDto);
+			logger.info("updated game for user {}", newGameDto.getoUser());
 			this.simpleMessagingTemplate
 			.convertAndSendToUser(newGameDto.getxUser(), "/queue/game", newGameDto);
+			logger.info("updated game for user {}", newGameDto.getxUser());
 		}
 	}
 	
@@ -50,11 +52,15 @@ public class TicTacToeWebSocketController {
 			// only act if challenge is valid and you are accepting challenges for yourself;
 			//check if there is an active game;
 			TwoPGame game = gameService.createGame(challenge);
+			//System.out.println(game.getGameState().toString());
 			TwoPGameDTO gameDTO = new TwoPGameDTO(game);
+			logger.info("creating game between from user {} and user {}",challenge.getChallenger(),challenge.getChallengee());
 			this.simpleMessagingTemplate
 			.convertAndSendToUser(challenge.getChallengee(), "/queue/game", gameDTO);
+			logger.info("created game for user {}", challenge.getChallengee());
 			this.simpleMessagingTemplate
-			.convertAndSendToUser(challenge.getChallengee(), "/queue/game", gameDTO);
+			.convertAndSendToUser(challenge.getChallenger(), "/queue/game", gameDTO);
+			logger.info("created game for user {}", challenge.getChallenger());
 		}
 		
 	}
