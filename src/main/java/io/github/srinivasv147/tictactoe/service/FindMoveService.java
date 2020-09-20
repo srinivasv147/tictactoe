@@ -125,7 +125,7 @@ public class FindMoveService {
 		
 	}
 
-	private boolean checkValid(List<Integer> gameState) {
+	public boolean checkValid(List<Integer> gameState) {
 		/*
 		 * Validity of tictactoe game:
 		 * 1. All elements will be 1, -1, 0.

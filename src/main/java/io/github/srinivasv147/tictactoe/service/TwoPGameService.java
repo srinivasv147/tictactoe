@@ -1,6 +1,7 @@
 package io.github.srinivasv147.tictactoe.service;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,23 @@ public class TwoPGameService {
 
 	private boolean isValidMove(List<Integer> oldGameState
 			, List<Integer> newGameState) {
-		
-		return false;
+		if(findMoveService.checkValid(newGameState)) {
+			return checkMove(oldGameState, newGameState);
+		}
+		else return false;
+	}
+
+	private boolean checkMove(List<Integer> oldGameState, List<Integer> newGameState) {
+		int same = 0;
+		int diff = 0;
+		Iterator<Integer> oldIterator = oldGameState.iterator();
+		Iterator<Integer> newIterator = newGameState.iterator();
+		while(oldIterator.hasNext()) {
+			if(oldIterator.next() == newIterator.next()) same++;
+			if(oldIterator.next() == 0 && newIterator.next() != 0) diff++;
+		}
+		if(same == 8 && diff == 1) return true;
+		else return false;
 	}
 
 	public TwoPGame updateGame(TwoPGameDTO gameDto) {
