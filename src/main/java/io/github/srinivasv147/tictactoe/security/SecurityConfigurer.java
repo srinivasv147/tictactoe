@@ -52,6 +52,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		.antMatchers("/api/create-user*").permitAll()
 		.antMatchers("/h2-console/**").permitAll()
 		.antMatchers("/api/websok*").permitAll()
+		.antMatchers("/api/websok/**").permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.exceptionHandling().authenticationEntryPoint(authEntryPoint)
@@ -69,6 +70,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

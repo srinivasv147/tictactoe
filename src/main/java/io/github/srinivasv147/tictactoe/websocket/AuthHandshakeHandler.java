@@ -1,9 +1,15 @@
 package io.github.srinivasv147.tictactoe.websocket;
 
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -23,16 +29,18 @@ public class AuthHandshakeHandler extends DefaultHandshakeHandler {
     protected Principal determineUser(ServerHttpRequest request,
                                       WebSocketHandler wsHandler,
                                       Map<String, Object> attributes) {
-        String query = request.getURI().getQuery();
-        if(query.startsWith("token")) {
-        	String[] keyValue = query.split("=");
-        	if( keyValue.length != 2 || !keyValue[0].equals("token")) return null;
-        	Optional<Otp> otp = otpRepository.findOneByToken(keyValue[1]);
-        	if(!otp.isPresent()) return null;
-        	String user = otp.get().getUser().getUsrId();
-        	return new StompPrincipal(user);
-        }
-        else return null;
+        URI uri = request.getURI();
+		List<NameValuePair> params = URLEncodedUtils.parse(uri, StandardCharsets.UTF_8);
+		params = params.stream()
+				.filter(param -> param.getName().equals("token")).collect(Collectors.toList());
+		if(params.size() != 1) return null;
+		else {
+			String queryOtp = params.get(0).getValue();
+			Optional<Otp> otp = otpRepository.findOneByToken(queryOtp);
+			if (!otp.isPresent()) return null;
+			String user = otp.get().getUser().getUsrId();
+			return new StompPrincipal(user);
+		}
     }
 	
 }
